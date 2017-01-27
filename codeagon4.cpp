@@ -1,6 +1,6 @@
 /*
-codeagon4.cpp
-This new file Created on 26-01-2017 at 22:56:02
+codeagon3.cpp
+This new file Created on 26-01-2017 at 21:49:19
 Created By Gautam Kumar
 */
 
@@ -9,76 +9,106 @@ using namespace std;
 #define mod 1000000007
 #define ll long long int
 
-
-ll modpow(ll a,ll b, ll c)
+vector<ll>a[30005];
+vector<ll>b[30005];
+vector<ll>task;
+ll vis[300005];
+ll indegree[30005];// task[30005];
+set<ll>val;
+vector<ll>topo;
+void topological()
 {
-	if(b==0)
-	return 1;
-	if(b==1)
-	return a;
-	ll temp = modpow(a,b/2,c);
-	temp*=temp;
-	temp%=c;
-	if(b%2==1)
-		temp*=a;
-	temp%=c;
-	return temp;
+	vector<ll>::iterator itr;
+    while(!val.empty())
+	{
+		set<ll>::iterator pqr=val.begin();
+		ll f = *pqr;
+		if(vis[f]==1)
+        topo.push_back(f);
+        val.erase(f);
+		itr = a[f].begin();
+        for(;itr!=a[f].end();++itr)
+		{
+            ll k = *itr;
+            indegree[k]--;
+            if(indegree[k]==0)
+				val.insert(k);
+		}
+	}
+	itr = topo.begin();
+	cout<<topo.size()<<endl;
+	for(;itr!=topo.end();++itr)
+		cout<<*itr<<" ";
+	cout<<endl;
 }
-int a[2005],b[2005],n,e,sum=0;
-void call(int cur,int last)
+void dfs(ll src)
 {
-	if(cur==n)
+	vis[src] = 1;
+	vector<ll>::iterator itr = b[src].begin();
+	for(;itr!=b[src].end();++itr)
 	{
-		sum++;
-		return;
+		if(vis[*itr]==0)
+            dfs(*itr);
 	}
-	int i;
-	for(i=0;i<e;i++)
-	{
-		if(last==-1)
-		{
-			b[i] = b[i]-1;
-			call(cur+1,i);
-		}
-		else if(last==i)
-		{
-			if(b[i]!=0)
-			{
-				b[i]=b[i]-1;
-				call(cur+1,i);
-			}
-			else
-			{
-				continue;
-			}
-		}
-		else if(last!=i)
-		{
-			for(int j=0;j<e;j++)
-				b[j] = a[j];
-			b[i] = b[i]-1;
-			call(cur+1,i);
-		}
 
-	}
 }
 int main()
 {
-	int t;
+	ll t;
 	cin>>t;
 	while(t--)
 	{
-		//int n,e;
-		cin>>n>>e;
-		sum = 0;
-		int i,j;
-		for(i=0;i<e;i++)
+		ll n,m;
+		cin>>n>>m;
+		ll i,j,k,l;
+		task.clear();
+		topo.clear();
+		val.clear();
+		for(i=0;i<30004;i++)
+		{
+			indegree[i] = 0;
+			vis[i] = 0;
+			a[i].clear();
+			b[i].clear();
+		}
+
+		for(i=1;i<=n;i++)
+		{
+            ll d;
+            cin>>d;
+            if(d==0)
 			{
-				cin>>a[i];
-				b[i] = a[i];
+				indegree[i] = 0;
+				continue;
 			}
-		call(0,-1);
-		cout<<sum<<endl;
+            for(j=1;j<=d;j++)
+			{
+				cin>>l;
+                a[l].push_back(i);
+                b[i].push_back(l);
+                indegree[i]++;
+			}
+
+		}
+		for(i=1;i<=m;i++)
+		{
+			cin>>l;
+			task.push_back(l);
+		}
+		for(i=0;i<m;i++)
+		{
+			if(vis[task[i]]==0)
+				dfs(task[i]);
+		}
+		for(i=1;i<=n;i++)
+		{
+			if(indegree[i]==0)
+				val.insert(i);
+		}
+		//for(i=1;i<=n;i++)
+			//cout<<vis[i]<<" ";
+		//cout<<n<<endl;
+		topological();
 
 	}
 	return 0;
