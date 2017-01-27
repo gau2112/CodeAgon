@@ -71,6 +71,8 @@ int main()
 	{
 		ll p,q,r,s;
 		cin>>p>>q>>r>>s;
+        s = s%mod;
+        
 		if(p==1)
 		{
 			ll r1 = fact[q];
@@ -104,11 +106,11 @@ int main()
 		}
 		else
 		{
-            ll u,v,z,res=q+1;
+            ll u,v,z,res=1;
             for(i=0;i<=r;i++)
 			{
                 ll val = (s+i);
-                //ll r1 = (q+1);
+                ll r1 = 1;//(q+1);
                 ll r2 = (num[q+1].con);
                 ll r3 = (num[q+1].var);
                 ll r4 = (den[q+1].con);
@@ -127,14 +129,12 @@ int main()
                 res %= mod;
                 res *= r3;
                 res %= mod;
-                //res
 
 			}
-			//ll posi = modpow(q+1,r+1,mod);
-			//res *= posi;
-			//res %= mod;
+			res %= mod;
 			cout<<res<<endl;
 		}
 	}
 	return 0;
 }
+
